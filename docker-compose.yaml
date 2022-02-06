@@ -1,0 +1,47 @@
+version: '3.1'
+
+services:
+
+  app:
+    image: custom/app-image
+    container_name: app_name
+    restart: always
+    ports:
+      - '80:80'
+    volumes:
+      - /var/www/app:/var/www/html
+
+  db:
+    image: mysql:5.7
+    container_name: app_db
+    restart: always
+    environment:
+      MYSQL_DATABASE: db_name
+      MYSQL_USER: db_user
+      MYSQL_PASSWORD_FILE: /run/secrets/mysql_secret
+      MYSQL_RANDOM_ROOT_PASSWORD: '1'
+    secrets:
+      - mysql_secret
+    volumes:
+      - database:/var/lib/mysql
+
+  db-backup:
+    image: databack/mysql-backup
+    container_name: app_db_backup
+    env_file:
+      - ./example.env
+    environment:
+      DB_PASS_FILE: /run/secrets/mysql_secret
+    secrets:
+      - db_password
+    volumes:
+      - ./backup/database/:/backup
+    depends_on:
+      - db
+
+volumes:
+    database:
+
+secrets:
+  mysql_secret:
+    file: ./path/to/secret
