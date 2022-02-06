@@ -26,3 +26,15 @@ services:
     depends_on:
       - db
 ```
+
+### Note
+
+The `./backup/database/` path should be owned by user `1005`, otherwise the 
+container is not able to copy the files to the backup target. 
+
+You can create a user and change the ownership of the directory:
+
+```bash
+$ sudo useradd --uid 1005 backup_user
+$ sudo chown backup_user: ./backup/database/
+```
