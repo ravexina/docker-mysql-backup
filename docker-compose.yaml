@@ -18,10 +18,10 @@ services:
     environment:
       MYSQL_DATABASE: db_name
       MYSQL_USER: db_user
-      MYSQL_PASSWORD_FILE: /run/secrets/mysql_secret
+      MYSQL_PASSWORD_FILE: /run/secrets/database_password
       MYSQL_RANDOM_ROOT_PASSWORD: '1'
     secrets:
-      - mysql_secret
+      - database_password
     volumes:
       - database:/var/lib/mysql
 
@@ -31,9 +31,9 @@ services:
     env_file:
       - ./example.env
     environment:
-      DB_PASS_FILE: /run/secrets/mysql_secret
+      DB_PASS_FILE: /run/secrets/database_password
     secrets:
-      - db_password
+      - database_password
     volumes:
       - ./backup/database/:/backup
     depends_on:
@@ -43,5 +43,5 @@ volumes:
     database:
 
 secrets:
-  mysql_secret:
-    file: ./path/to/secret
+  database_password:
+    file: ./path/to/mysql/password
